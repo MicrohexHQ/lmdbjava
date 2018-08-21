@@ -262,4 +262,24 @@ public final class TxnTest {
     dbi.put(key, bb(2));
   }
 
+  //MapFullException
+  @Test(expected = NotReadyException.class)
+  public void txShouldNotFailWithStateErrorOnFullMap() {
+    final Dbi<ByteBuffer> dbi = env.openDbi(DB_1, MDB_CREATE);
+    final Txn<ByteBuffer> txn = env.txnWrite();
+    try {
+      final ByteBuffer key = allocateDirect(4);
+      final ByteBuffer buffer = allocateDirect(1024 * 72 - 15);
+      // fill the DB
+      dbi.put(txn, key, buffer);
+      // commit throws an exception as the commit won't fit in the DB
+      txn.commit();
+    } catch (Env.MapFullException mfe) {
+      // the exception is critical and most probably should result in execution termination
+      // yet it would be prudent to allow the txn to be aborted (or at least to not blow up with an exception that hides the real issue)
+      txn.abort();
+      throw mfe;
+    }
+  }
+
 }
