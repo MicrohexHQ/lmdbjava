@@ -262,8 +262,7 @@ public final class TxnTest {
     dbi.put(key, bb(2));
   }
 
-  //MapFullException
-  @Test(expected = NotReadyException.class)
+  @Test(expected = Env.MapFullException.class)
   public void txShouldNotFailWithStateErrorOnFullMap() {
     final Dbi<ByteBuffer> dbi = env.openDbi(DB_1, MDB_CREATE);
     final Txn<ByteBuffer> txn = env.txnWrite();
