@@ -61,3 +61,4 @@ This project is licensed under the
 
 This project distribution JAR includes LMDB, which is licensed under
 [The OpenLDAP Public License](http://www.openldap.org/software/release/license.html).
+ 
